@@ -211,19 +211,19 @@ function PaycheckInterval()
                         local account = exports['qb-management']:GetAccount(Player.PlayerData.job.name)
                         if account ~= 0 then -- Checks if player is employed by a society
                             if account < payment then -- Checks if company has enough money to pay society
-                                TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t('error.company_too_poor'), 'error')
+                                TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Ditt företag har ej råd att betala ut lön", 5000, 'error')
                             else
                                 Player.Functions.AddMoney('bank', payment)
                                 exports['qb-management']:RemoveMoney(Player.PlayerData.job.name, payment)
-                                TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t('info.received_paycheck', {value = payment}))
+                                TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000, 'success')
                             end
                         else
                             Player.Functions.AddMoney('bank', payment)
-                            TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t('info.received_paycheck', {value = payment}))
+                            TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000, 'success')
                         end
                     else
                         Player.Functions.AddMoney('bank', payment)
-                        TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t('info.received_paycheck', {value = payment}))
+                        TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000, 'success')
                     end
                 end
             end

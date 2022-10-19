@@ -96,7 +96,7 @@ QBCore.Commands.Add('tp', Lang:t("command.tp.help"), { { name = Lang:t("command.
             if location then
                 TriggerClientEvent('QBCore:Command:TeleportToCoords', source, location.x, location.y, location.z, location.w)
             else
-                TriggerClientEvent('QBCore:Notify', source, Lang:t('error.location_not_exist'), 'error')
+                TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Denna plats finns ej", 5000, 'error')
             end
         end
     else
@@ -107,10 +107,10 @@ QBCore.Commands.Add('tp', Lang:t("command.tp.help"), { { name = Lang:t("command.
             if x ~= 0 and y ~= 0 and z ~= 0 then
                 TriggerClientEvent('QBCore:Command:TeleportToCoords', source, x, y, z)
             else
-                TriggerClientEvent('QBCore:Notify', source, Lang:t('error.wrong_format'), 'error')
+                TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Fel format", 5000, 'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', source, Lang:t('error.missing_args'), 'error')
+            TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Fel uppstod", 5000, 'error')
         end
     end
 end, 'admin')
@@ -132,7 +132,7 @@ QBCore.Commands.Add('addpermission', Lang:t("command.addpermission.help"), { { n
     if Player then
         QBCore.Functions.AddPermission(Player.PlayerData.source, permission)
     else
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren ej online", 5000, 'error')
     end
 end, 'god')
 
@@ -142,7 +142,7 @@ QBCore.Commands.Add('removepermission', Lang:t("command.removepermission.help"),
     if Player then
         QBCore.Functions.RemovePermission(Player.PlayerData.source, permission)
     else
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren ej online", 5000, 'error')
     end
 end, 'god')
 
@@ -150,12 +150,12 @@ end, 'god')
 
 QBCore.Commands.Add('openserver', Lang:t("command.openserver.help"), {}, false, function(source)
     if not QBCore.Config.Server.Closed then
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.server_already_open'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Server är redan öppen", 5000, 'info')
         return
     end
     if QBCore.Functions.HasPermission(source, 'admin') then
         QBCore.Config.Server.Closed = false
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('success.server_opened'), 'success')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Serven har öppnats", 5000, 'info')
     else
         QBCore.Functions.Kick(source, Lang:t("error.no_permission"), nil, nil)
     end
@@ -163,7 +163,7 @@ end, 'admin')
 
 QBCore.Commands.Add('closeserver', Lang:t("command.closeserver.help"), {{ name = Lang:t("command.closeserver.params.reason.name"), help = Lang:t("command.closeserver.params.reason.help")}}, false, function(source, args)
     if QBCore.Config.Server.Closed then
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.server_already_closed'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Serven är redan stängd", 5000, 'info')
         return
     end
     if QBCore.Functions.HasPermission(source, 'admin') then
@@ -175,7 +175,7 @@ QBCore.Commands.Add('closeserver', Lang:t("command.closeserver.help"), {{ name =
                 QBCore.Functions.Kick(k, reason, nil, nil)
             end
         end
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('success.server_closed'), 'success')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Serven har stängts", 5000, 'info')
     else
         QBCore.Functions.Kick(source, Lang:t("error.no_permission"), nil, nil)
     end
@@ -198,7 +198,7 @@ QBCore.Commands.Add('givemoney', Lang:t("command.givemoney.help"), { { name = La
     if Player then
         Player.Functions.AddMoney(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
     end
 end, 'admin')
 
@@ -207,7 +207,7 @@ QBCore.Commands.Add('setmoney', Lang:t("command.setmoney.help"), { { name = Lang
     if Player then
         Player.Functions.SetMoney(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
     end
 end, 'admin')
 
@@ -223,7 +223,7 @@ QBCore.Commands.Add('setjob', Lang:t("command.setjob.help"), { { name = Lang:t("
     if Player then
         Player.Functions.SetJob(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
     end
 end, 'admin')
 
@@ -245,51 +245,51 @@ end, 'admin')
 
 -- Out of Character Chat
 
-QBCore.Commands.Add('ooc', Lang:t("command.ooc.help"), {}, false, function(source, args)
-    local message = table.concat(args, ' ')
-    local Players = QBCore.Functions.GetPlayers()
-    local Player = QBCore.Functions.GetPlayer(source)
-    local playerCoords = GetEntityCoords(GetPlayerPed(source))
-    for _, v in pairs(Players) do
-        if v == source then
-            TriggerClientEvent('chat:addMessage', v, {
-                color = { 0, 0, 255},
-                multiline = true,
-                args = {'OOC | '.. GetPlayerName(source), message}
-            })
-        elseif #(playerCoords - GetEntityCoords(GetPlayerPed(v))) < 20.0 then
-            TriggerClientEvent('chat:addMessage', v, {
-                color = { 0, 0, 255},
-                multiline = true,
-                args = {'OOC | '.. GetPlayerName(source), message}
-            })
-        elseif QBCore.Functions.HasPermission(v, 'admin') then
-            if QBCore.Functions.IsOptin(v) then
-                TriggerClientEvent('chat:addMessage', v, {
-                    color = { 0, 0, 255},
-                    multiline = true,
-                    args = {'Proxmity OOC | '.. GetPlayerName(source), message}
-                })
-                TriggerEvent('qb-log:server:CreateLog', 'ooc', 'OOC', 'white', '**' .. GetPlayerName(source) .. '** (CitizenID: ' .. Player.PlayerData.citizenid .. ' | ID: ' .. source .. ') **Message:** ' .. message, false)
-            end
-        end
-    end
-end, 'user')
+-- QBCore.Commands.Add('ooc', Lang:t("command.ooc.help"), {}, false, function(source, args)
+--     local message = table.concat(args, ' ')
+--     local Players = QBCore.Functions.GetPlayers()
+--     local Player = QBCore.Functions.GetPlayer(source)
+--     local playerCoords = GetEntityCoords(GetPlayerPed(source))
+--     for _, v in pairs(Players) do
+--         if v == source then
+--             TriggerClientEvent('chat:addMessage', v, {
+--                 color = { 0, 0, 255},
+--                 multiline = true,
+--                 args = {'OOC | '.. GetPlayerName(source), message}
+--             })
+--         elseif #(playerCoords - GetEntityCoords(GetPlayerPed(v))) < 20.0 then
+--             TriggerClientEvent('chat:addMessage', v, {
+--                 color = { 0, 0, 255},
+--                 multiline = true,
+--                 args = {'OOC | '.. GetPlayerName(source), message}
+--             })
+--         elseif QBCore.Functions.HasPermission(v, 'admin') then
+--             if QBCore.Functions.IsOptin(v) then
+--                 TriggerClientEvent('chat:addMessage', v, {
+--                     color = { 0, 0, 255},
+--                     multiline = true,
+--                     args = {'Proxmity OOC | '.. GetPlayerName(source), message}
+--                 })
+--                 TriggerEvent('qb-log:server:CreateLog', 'ooc', 'OOC', 'white', '**' .. GetPlayerName(source) .. '** (CitizenID: ' .. Player.PlayerData.citizenid .. ' | ID: ' .. source .. ') **Message:** ' .. message, false)
+--             end
+--         end
+--     end
+-- end, 'user')
 
 -- Me command
 
-QBCore.Commands.Add('me', Lang:t("command.me.help"), {{name = Lang:t("command.me.params.message.name"), help = Lang:t("command.me.params.message.help")}}, false, function(source, args)
-    if #args < 1 then TriggerClientEvent('QBCore:Notify', source, Lang:t('error.missing_args2'), 'error') return end
-    local ped = GetPlayerPed(source)
-    local pCoords = GetEntityCoords(ped)
-    local msg = table.concat(args, ' '):gsub('[~<].-[>~]', '')
-    local Players = QBCore.Functions.GetPlayers()
-    for i=1, #Players do
-        local Player = Players[i]
-        local target = GetPlayerPed(Player)
-        local tCoords = GetEntityCoords(target)
-        if target == ped or #(pCoords - tCoords) < 20 then
-            TriggerClientEvent('QBCore:Command:ShowMe3D', Player, source, msg)
-        end
-    end
-end, 'user')
+-- QBCore.Commands.Add('me', Lang:t("command.me.help"), {{name = Lang:t("command.me.params.message.name"), help = Lang:t("command.me.params.message.help")}}, false, function(source, args)
+--     if #args < 1 then TriggerClientEvent('QBCore:Notify', source, Lang:t('error.missing_args2'), 'error') return end
+--     local ped = GetPlayerPed(source)
+--     local pCoords = GetEntityCoords(ped)
+--     local msg = table.concat(args, ' '):gsub('[~<].-[>~]', '')
+--     local Players = QBCore.Functions.GetPlayers()
+--     for i=1, #Players do
+--         local Player = Players[i]
+--         local target = GetPlayerPed(Player)
+--         local tCoords = GetEntityCoords(target)
+--         if target == ped or #(pCoords - tCoords) < 20 then
+--             TriggerClientEvent('QBCore:Command:ShowMe3D', Player, source, msg)
+--         end
+--     end
+-- end, 'user')
