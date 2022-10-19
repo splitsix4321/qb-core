@@ -89,7 +89,7 @@ QBCore.Commands.Add('tp', Lang:t("command.tp.help"), { { name = Lang:t("command.
             local coords = GetEntityCoords(target)
             TriggerClientEvent('QBCore:Command:TeleportToPlayer', source, coords)
         else
-            TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+            TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
         end
     else
             local location = QBShared.Locations[args[1]]
