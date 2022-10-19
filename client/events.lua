@@ -37,7 +37,7 @@ RegisterNetEvent('QBCore:Command:GoToMarker', function()
 
     local blipMarker <const> = GetFirstBlipInfoId(8)
     if not DoesBlipExist(blipMarker) then
-        QBCore.Functions.Notify(Lang:t("error.no_waypoint"), "error", 5000)
+        exports['SS-Notify']:Alert("Admin", "Ingen waypoint hittas", 5000, 'error')
         return 'marker'
     end
 
