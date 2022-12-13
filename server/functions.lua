@@ -211,19 +211,19 @@ function PaycheckInterval()
                         local account = exports['qb-management']:GetAccount(Player.PlayerData.job.name)
                         if account ~= 0 then -- Checks if player is employed by a society
                             if account < payment then -- Checks if company has enough money to pay society
-                                TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Ditt företag har ej råd att betala ut lön", 5000, 'error')
+                                TriggerClientEvent('ataNotification:show', src, "fab fa-cc-visa text-info",'Visa',"Lön", "Ditt företag har ej pengar att betala ut lön", 5000,"not1")
                             else
                                 Player.Functions.AddMoney('bank', payment)
                                 exports['qb-management']:RemoveMoney(Player.PlayerData.job.name, payment)
-                                TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000, 'success')
+                                TriggerClientEvent('ataNotification:show', Player.PlayerData.source, "fab fa-cc-visa text-info",'Visa',"Lön", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000,"not1")
                             end
                         else
                             Player.Functions.AddMoney('bank', payment)
-                            TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000, 'success')
+                            TriggerClientEvent('ataNotification:show', Player.PlayerData.source, "fab fa-cc-visa text-info",'Visa',"Lön", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000,"not1")
                         end
                     else
                         Player.Functions.AddMoney('bank', payment)
-                        TriggerClientEvent('SS-Notify:Alert', Player.PlayerData.source, "Bank", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000, 'success')
+                        TriggerClientEvent('ataNotification:show', Player.PlayerData.source, "fab fa-cc-visa text-info",'Visa',"Lön", "Du fick din lön på <span style='color:#47cf73'>"..payment.."Kr</span>", 5000,"not1")
                     end
                 end
             end

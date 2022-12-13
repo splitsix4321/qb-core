@@ -37,7 +37,7 @@ RegisterNetEvent('QBCore:Command:GoToMarker', function()
 
     local blipMarker <const> = GetFirstBlipInfoId(8)
     if not DoesBlipExist(blipMarker) then
-        exports['SS-Notify']:Alert("Admin", "Ingen waypoint hittas", 5000, 'error')
+        exports['ataNotification']:notification('fas fa-exclamation-circle text-danger','Pinehill',"Admin", "Ingen waypoint hittades", 5000)
         return 'marker'
     end
 
@@ -108,15 +108,38 @@ RegisterNetEvent('QBCore:Command:GoToMarker', function()
         -- If we can't find the coords, set the coords to the old ones.
         -- We don't unpack them before since they aren't in a loop and only called once.
         SetPedCoordsKeepVehicle(ped, oldCoords['x'], oldCoords['y'], oldCoords['z'] - 1.0)
-        QBCore.Functions.Notify(Lang:t("error.tp_error"), "error", 5000)
+        exports['ataNotification']:notification('fas fa-exclamation-circle text-danger','Pinehill',"Admin", "Fel uppstod", 5000)
     end
 
     -- If Z coord was found, set coords in found coords.
     SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-    QBCore.Functions.Notify(Lang:t("success.teleported_waypoint"), "success", 5000)
+    exports['ataNotification']:notification('fas fa-exclamation-circle text-danger','Pinehill',"Admin", "Telerporterar till waypointen", 5000)
 end)
 
 -- Vehicle Commands
+
+RegisterNetEvent('QBCore:Command:SpawnVehiclewithkeys', function(vehName)
+    local ped = PlayerPedId()
+    local hash = GetHashKey(vehName)
+    local veh = GetVehiclePedIsUsing(ped)
+    if not IsModelInCdimage(hash) then return end
+    RequestModel(hash)
+    while not HasModelLoaded(hash) do
+        Wait(0)
+    end
+
+    if IsPedInAnyVehicle(ped) then
+        DeleteVehicle(veh)
+    end
+
+    local vehicle = CreateVehicle(hash, GetEntityCoords(ped), GetEntityHeading(ped), true, false)
+    TaskWarpPedIntoVehicle(ped, vehicle, -1)
+    SetVehicleFuelLevel(vehicle, 100.0)
+    SetVehicleDirtLevel(vehicle, 0.0)
+    SetModelAsNoLongerNeeded(hash)
+    TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(vehicle))
+    TriggerServerEvent('vehiclekeys:server:givekey', QBCore.Functions.GetPlate(vehicle), GetDisplayNameFromVehicleModel(vehicle))
+end)
 
 RegisterNetEvent('QBCore:Command:SpawnVehicle', function(vehName)
     local ped = PlayerPedId()
@@ -171,6 +194,7 @@ end)
 RegisterNetEvent('QBCore:Notify', function(text, type, length)
     QBCore.Functions.Notify(text, type, length)
 end)
+
 
 -- This event is exploitable and should not be used. It has been deprecated, and will be removed soon.
 RegisterNetEvent('QBCore:Client:UseItem', function(item)
@@ -240,3 +264,4 @@ RegisterNetEvent('QBCore:Client:OnSharedUpdateMultiple', function(tableName, val
     end
     TriggerEvent('QBCore:Client:UpdateObject')
 end)
+

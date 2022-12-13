@@ -89,14 +89,14 @@ QBCore.Commands.Add('tp', Lang:t("command.tp.help"), { { name = Lang:t("command.
             local coords = GetEntityCoords(target)
             TriggerClientEvent('QBCore:Command:TeleportToPlayer', source, coords)
         else
-            TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
+            TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
         end
     else
             local location = QBShared.Locations[args[1]]
             if location then
                 TriggerClientEvent('QBCore:Command:TeleportToCoords', source, location.x, location.y, location.z, location.w)
             else
-                TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Denna plats finns ej", 5000, 'error')
+                TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Denna plats finns inte", 5000,"not1")
             end
         end
     else
@@ -107,10 +107,10 @@ QBCore.Commands.Add('tp', Lang:t("command.tp.help"), { { name = Lang:t("command.
             if x ~= 0 and y ~= 0 and z ~= 0 then
                 TriggerClientEvent('QBCore:Command:TeleportToCoords', source, x, y, z)
             else
-                TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Fel format", 5000, 'error')
+                TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Fel format", 5000,"not1")
             end
         else
-            TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Fel uppstod", 5000, 'error')
+            TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Fel uppstod", 5000,"not1")
         end
     end
 end, 'admin')
@@ -132,7 +132,7 @@ QBCore.Commands.Add('addpermission', Lang:t("command.addpermission.help"), { { n
     if Player then
         QBCore.Functions.AddPermission(Player.PlayerData.source, permission)
     else
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren ej online", 5000, 'error')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
     end
 end, 'god')
 
@@ -142,7 +142,7 @@ QBCore.Commands.Add('removepermission', Lang:t("command.removepermission.help"),
     if Player then
         QBCore.Functions.RemovePermission(Player.PlayerData.source, permission)
     else
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren ej online", 5000, 'error')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
     end
 end, 'god')
 
@@ -150,12 +150,12 @@ end, 'god')
 
 QBCore.Commands.Add('openserver', Lang:t("command.openserver.help"), {}, false, function(source)
     if not QBCore.Config.Server.Closed then
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Server är redan öppen", 5000, 'info')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Serven är redan öppen", 5000,"not1")
         return
     end
     if QBCore.Functions.HasPermission(source, 'admin') then
         QBCore.Config.Server.Closed = false
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Serven har öppnats", 5000, 'info')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Serven har öppnats", 5000,"not1")
     else
         QBCore.Functions.Kick(source, Lang:t("error.no_permission"), nil, nil)
     end
@@ -163,7 +163,7 @@ end, 'admin')
 
 QBCore.Commands.Add('closeserver', Lang:t("command.closeserver.help"), {{ name = Lang:t("command.closeserver.params.reason.name"), help = Lang:t("command.closeserver.params.reason.help")}}, false, function(source, args)
     if QBCore.Config.Server.Closed then
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Serven är redan stängd", 5000, 'info')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Serven är redan stängd", 5000,"not1")
         return
     end
     if QBCore.Functions.HasPermission(source, 'admin') then
@@ -175,7 +175,7 @@ QBCore.Commands.Add('closeserver', Lang:t("command.closeserver.help"), {{ name =
                 QBCore.Functions.Kick(k, reason, nil, nil)
             end
         end
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Serven har stängts", 5000, 'info')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Serven har stängts", 5000,"not1")
     else
         QBCore.Functions.Kick(source, Lang:t("error.no_permission"), nil, nil)
     end
@@ -185,6 +185,10 @@ end, 'admin')
 
 QBCore.Commands.Add('car', Lang:t("command.car.help"), {{ name = Lang:t("command.car.params.model.name"), help = Lang:t("command.car.params.model.help") }}, true, function(source, args)
     TriggerClientEvent('QBCore:Command:SpawnVehicle', source, args[1])
+end, 'admin')
+
+QBCore.Commands.Add('carwithkeys', Lang:t("command.car.help"), {{ name = Lang:t("command.car.params.model.name"), help = Lang:t("command.car.params.model.help") }}, true, function(source, args)
+    TriggerClientEvent('QBCore:Command:SpawnVehiclewithkeys', source, args[1])
 end, 'admin')
 
 QBCore.Commands.Add('dv', Lang:t("command.dv.help"), {}, false, function(source)
@@ -198,7 +202,7 @@ QBCore.Commands.Add('givemoney', Lang:t("command.givemoney.help"), { { name = La
     if Player then
         Player.Functions.AddMoney(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
     end
 end, 'admin')
 
@@ -207,7 +211,7 @@ QBCore.Commands.Add('setmoney', Lang:t("command.setmoney.help"), { { name = Lang
     if Player then
         Player.Functions.SetMoney(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
     end
 end, 'admin')
 
@@ -223,7 +227,7 @@ QBCore.Commands.Add('setjob', Lang:t("command.setjob.help"), { { name = Lang:t("
     if Player then
         Player.Functions.SetJob(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('SS-Notify:Alert', source, "Admin", "Spelaren är ej online", 5000, 'error')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
     end
 end, 'admin')
 
@@ -239,7 +243,7 @@ QBCore.Commands.Add('setgang', Lang:t("command.setgang.help"), { { name = Lang:t
     if Player then
         Player.Functions.SetGang(tostring(args[2]), tonumber(args[3]))
     else
-        TriggerClientEvent('QBCore:Notify', source, Lang:t('error.not_online'), 'error')
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Admin", "Spelaren är ej online", 5000,"not1")
     end
 end, 'admin')
 

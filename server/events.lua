@@ -183,10 +183,10 @@ RegisterNetEvent('QBCore:ToggleDuty', function()
     if not Player then return end
     if Player.PlayerData.job.onduty then
         Player.Functions.SetJobDuty(false)
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('info.off_duty'))
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Jobbpanel", "Du gick ur tjänst", 5000,"not1")
     else
         Player.Functions.SetJobDuty(true)
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('info.on_duty'))
+        TriggerClientEvent('ataNotification:show', src, "fas fa-exclamation-circle text-danger",'Pinehill',"Jobbpanel", "Du gick i tjänst", 5000,"not1")
     end
     TriggerClientEvent('QBCore:Client:SetDuty', src, Player.PlayerData.job.onduty)
 end)
